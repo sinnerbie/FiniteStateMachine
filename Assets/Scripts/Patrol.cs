@@ -10,6 +10,8 @@ public class Patrol: State
 {
     int completedLoops;
     int currentIndex = -1;
+
+    public float accuracy = 0.25f;
     public Patrol(GameObject _npc, NavMeshAgent _agent, Animator _anim, Transform _player) : base(_npc, _agent, _anim, _player)
     {
         name = STATE.PATROL;
@@ -19,12 +21,25 @@ public class Patrol: State
     public override void Enter()
     {
         //TODO
+        completedLoops = 0;
         base.Enter();
     }
     public override void Update()
     {
         //TODO
-        stage = EVENT.EXIT;
+        GameEnvironment ge = new GameEnvironment();
+        float distance = Vector3.Distance(npc.transform.position, ge.Checkpoints[currentIndex].transform.position);
+        if (distance <= accuracy || currentIndex < 0)
+        {
+            currentIndex = (currentIndex + 1) % ge.Checkpoints.Count;
+            if (currentIndex == 0) completedLoops++;
+            agent.SetDestination(ge.Checkpoints[currentIndex].transform.position);
+        }
+        if (CanSeePlayer())
+        {
+            nextState = new Pursue(npc, agent, anim, player);
+            stage = EVENT.EXIT;
+        }
     }
 
     public override void Exit()

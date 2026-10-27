@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.AI;
 public class Idle : State //Clase Idle que hereda de State
 {
+    public float idleTime = 2;
+    private float startTime;
     public Idle(GameObject _npc, NavMeshAgent _agent, Animator _anim, Transform _player) : base(_npc, _agent, _anim, _player)
     {
         name = STATE.IDLE;
@@ -13,14 +15,15 @@ public class Idle : State //Clase Idle que hereda de State
     public override void Enter()
     {
         //TODO
+        startTime = Time.time + idleTime;
         base.Enter(); //Aqui ya se hace stage = EVENT.UPDATE;, no necesitamos hacerlo aqui
     }
 
     //Update se ejecuta una y otra vez y necesita un evento que le haga salir (que rompa la secuencia)
     public override void Update()
     {
-        //TODO
-        stage = EVENT.EXIT;
+        if (Time.time >= startTime)
+            stage = EVENT.EXIT;
     }
     public override void Exit()
     {
