@@ -12,12 +12,32 @@ public class Pursue: State
     public override void Enter()
     {
         //TODO
+        anim.SetTrigger("isRunning");
+        agent.speed = 3;
         base.Enter();
     }
     public override void Update()
     {
-       //TODO
-        stage = EVENT.EXIT;
+        //TODO
+        if (CanSeePlayer())
+            agent.SetDestination(player.position);
+        else
+        {
+            nextState = new Idle(npc, agent, anim, player);
+            stage = EVENT.EXIT;
+        }
+
+        if (CanAttackPlayer())
+        {
+            nextState = new Attack(npc, agent, anim, player);
+            stage = EVENT.EXIT;
+        }
+        
+        if (IsPlayerBehind())
+        {
+            nextState = new RunAway(npc, agent, anim, player);
+            stage = EVENT.EXIT;
+        }
     }
 
     public override void Exit()

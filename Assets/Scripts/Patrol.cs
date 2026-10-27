@@ -9,7 +9,7 @@ using UnityEngine.AI;
 public class Patrol: State
 {
     int completedLoops;
-    int currentIndex = -1;
+    int currentIndex = 0;
 
     public float accuracy = 0.25f;
     public Patrol(GameObject _npc, NavMeshAgent _agent, Animator _anim, Transform _player) : base(_npc, _agent, _anim, _player)
@@ -22,14 +22,19 @@ public class Patrol: State
     {
         //TODO
         completedLoops = 0;
+        GameEnvironment ge = GameEnvironment.Singleton;
+        anim.SetTrigger("isWalking");
+        agent.speed = 2;
+        agent.SetDestination(ge.Checkpoints[currentIndex].transform.position);
         base.Enter();
     }
     public override void Update()
     {
         //TODO
-        GameEnvironment ge = new GameEnvironment();
-        float distance = Vector3.Distance(npc.transform.position, ge.Checkpoints[currentIndex].transform.position);
-        if (distance <= accuracy || currentIndex < 0)
+        GameEnvironment ge = GameEnvironment.Singleton;
+        float distance = Mathf.Infinity;
+        distance = Vector3.Distance(npc.transform.position, ge.Checkpoints[currentIndex].transform.position);
+        if (distance <= accuracy)
         {
             currentIndex = (currentIndex + 1) % ge.Checkpoints.Count;
             if (currentIndex == 0) completedLoops++;
