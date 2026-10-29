@@ -23,7 +23,7 @@ public class Patrol: State
         //TODO
         completedLoops = 0;
         GameEnvironment ge = GameEnvironment.Singleton;
-        anim.SetTrigger("isWalking");
+        agent.isStopped = false;
         agent.speed = 2;
         agent.SetDestination(ge.Checkpoints[currentIndex].transform.position);
         base.Enter();
@@ -31,6 +31,7 @@ public class Patrol: State
     public override void Update()
     {
         //TODO
+        anim.SetTrigger("isWalking");
         GameEnvironment ge = GameEnvironment.Singleton;
         float distance = Mathf.Infinity;
         distance = Vector3.Distance(npc.transform.position, ge.Checkpoints[currentIndex].transform.position);
@@ -43,6 +44,11 @@ public class Patrol: State
         if (CanSeePlayer())
         {
             nextState = new Pursue(npc, agent, anim, player);
+            stage = EVENT.EXIT;
+        }
+        if (IsPlayerBehind())
+        {
+            nextState = new RunAway(npc, agent, anim, player);
             stage = EVENT.EXIT;
         }
     }

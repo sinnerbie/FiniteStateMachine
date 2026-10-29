@@ -15,7 +15,6 @@ public class Idle : State //Clase Idle que hereda de State
     public override void Enter()
     {
         //TODO
-        anim.SetTrigger("isIdle");
         startTime = Time.time + idleTime;
         base.Enter(); //Aqui ya se hace stage = EVENT.UPDATE;, no necesitamos hacerlo aqui
     }
@@ -23,6 +22,7 @@ public class Idle : State //Clase Idle que hereda de State
     //Update se ejecuta una y otra vez y necesita un evento que le haga salir (que rompa la secuencia)
     public override void Update()
     {
+        anim.SetTrigger("isIdle");
         if (Time.time >= startTime)
         {
             nextState = new Patrol(npc, agent, anim, player);

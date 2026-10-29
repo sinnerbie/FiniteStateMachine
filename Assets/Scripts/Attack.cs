@@ -19,13 +19,26 @@ public class Attack : State
     public override void Enter()
     {
         //TODO
+        agent.isStopped = true;
         base.Enter();
     }
 	
     public override void Update()
     {
         //TODO
-        stage = EVENT.EXIT;
+        anim.SetTrigger("isShooting");
+        shoot.Play();
+        Vector3 direction = player.position - npc.transform.position;
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+        npc.transform.rotation = Quaternion.Slerp(npc.transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+
+        if (!CanAttackPlayer())
+        {
+            nextState = new Pursue(npc, agent, anim, player);
+            if (!CanSeePlayer())
+                nextState = new Idle(npc, agent, anim, player);
+            stage = EVENT.EXIT;
+        }
     }
     public override void Exit()
     {
