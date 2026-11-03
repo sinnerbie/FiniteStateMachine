@@ -15,12 +15,14 @@ public class RunAway : State
     public override void Enter()
     {
         //TODO
+        agent.speed = 3;
         agent.isStopped = false;
         agent.SetDestination(safeLocation.transform.position);
         base.Enter();
     }
     public override void Update()
     {
+        anim.SetTrigger("isRunning");
         float distance = Vector3.Distance(safeLocation.transform.position, npc.transform.position);
         if (distance <= accuracy)
         {

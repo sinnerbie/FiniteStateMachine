@@ -57,7 +57,9 @@ public class State
     //seguir mejor el codigo lo pondremos todo aqui
     public bool CanSeePlayer()
     {
-        float currentAngle = Vector3.Angle(player.position, npc.transform.forward);
+        Vector3 targetDirection = player.position - npc.transform.position;
+        targetDirection = targetDirection.normalized;
+        float currentAngle = Vector3.Angle(targetDirection, npc.transform.forward);
         float distance = Vector3.Distance(npc.transform.position, player.position);
         if (currentAngle <= visAngle && distance <= visDist) 
         {
@@ -70,9 +72,10 @@ public class State
     //El jugador esta detras del NPC a una distancia menor a 2 y en un angulo de 30
     public bool IsPlayerBehind()
     {
-        float currentAngle = Vector3.Angle(player.position, npc.transform.forward);
+        Vector3 targetDirection = player.position - npc.transform.position;
+        targetDirection = targetDirection.normalized;
+        float currentAngle = Vector3.Angle(targetDirection, npc.transform.forward);
         float distance = Vector3.Distance(npc.transform.position, player.position);
-        Debug.Log("Current angle is: " + currentAngle);
         if (currentAngle >= 150 && distance <= 2)
         {
             Debug.Log(npc.name + " knows that player is behind them");
